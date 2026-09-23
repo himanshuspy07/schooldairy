@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color-scheme: light;
+    --background: #FAF7F2;
+    --foreground: #1C1917;
+    --primary: #2E7D4F;
+    --primary-foreground: #FFFFFF;
+    --primary-light: #E8F5E9;
+    --primary-dark: #225C3A;
+    --amber: #D97706;
+    --amber-light: #FEF3C7;
+    --red: #DC2626;
+    --red-light: #FEE2E2;
+    --border: #E6DFD5;
+    accent-color: #2E7D4F;
+  }
+
+  * {
+    border-color: #E6DFD5;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body {
+    background-color: #FAF7F2;
+    color: #1C1917;
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
+    user-select: auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Text selection: warm light green, no blue */
+  ::selection {
+    background-color: #C8E6C9;
+    color: #144626;
+  }
+
+  /* Focus rings: NO BLUE */
+  *:focus, *:focus-visible {
+    outline: none;
+  }
+  button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 2px solid #2E7D4F !important;
+    outline-offset: 2px !important;
+  }
+
+  /* Form autofill: prevent browser blue */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #FAF7F2 inset !important;
+    -webkit-text-fill-color: #1C1917 !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  /* Disable default iOS date picker blue accents if used */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(36%) sepia(51%) saturate(542%) hue-rotate(94deg) brightness(94%) contrast(87%);
+    cursor: pointer;
+  }
+}
+
+/* Custom scrollbars without blue */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF7F2;
+}
+::-webkit-scrollbar-thumb {
+  background: #D6CEC3;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B8AF9F;
+}
+
+/* Safe area support for iOS notches and gesture bars */
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+}
+.pt-safe {
+  padding-top: max(env(safe-area-inset-top, 0px), 12px);
+}

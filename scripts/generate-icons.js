@@ -1,0 +1,97 @@
+const fs = require('fs');
+const path = require('path');
+const sharp = require('sharp');
+
+const publicDir = path.join(__dirname, '..', 'public');
+if (!fs.existsSync(publicDir)) {
+  fs.mkdirSync(publicDir, { recursive: true });
+}
+
+// Crisp, beautiful SVG icon featuring a school notebook / diary with a golden bookmark and a pencil
+const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="112" fill="#2E7D4F"/>
+  <!-- Decorative inner subtle glow -->
+  <rect x="24" y="24" width="464" height="464" rx="92" fill="none" stroke="#3DA368" stroke-width="8" opacity="0.6"/>
+  
+  <!-- School Diary Book Cover -->
+  <rect x="110" y="86" width="292" height="340" rx="28" fill="#FAF7F2" filter="drop-shadow(0 12px 24px rgba(0,0,0,0.25))"/>
+  <!-- Spine -->
+  <rect x="110" y="86" width="48" height="340" rx="24" fill="#24633E"/>
+  <rect x="136" y="86" width="22" height="340" fill="#2E7D4F"/>
+  
+  <!-- Pages edge texture -->
+  <line x1="392" y1="110" x2="392" y2="402" stroke="#E7E5E4" stroke-width="4"/>
+  <line x1="384" y1="110" x2="384" y2="402" stroke="#D6D3D1" stroke-width="2"/>
+  
+  <!-- Bookmark ribbon in amber -->
+  <path d="M220 86 V230 L246 206 L272 230 V86 Z" fill="#D97706"/>
+  
+  <!-- Diary front title lines / emblem -->
+  <rect x="180" y="250" width="180" height="14" rx="7" fill="#2E7D4F"/>
+  <rect x="180" y="278" width="130" height="10" rx="5" fill="#78716C"/>
+  <rect x="180" y="300" width="150" height="10" rx="5" fill="#A8A29E"/>
+  
+  <!-- Checkmark / A+ stamp in warm green & amber -->
+  <circle cx="340" cy="350" r="34" fill="#E8F5E9" stroke="#2E7D4F" stroke-width="4"/>
+  <path d="M326 350 L336 360 L356 340" fill="none" stroke="#2E7D4F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+
+// Maskable icon with 15% safe padding
+const svgMaskable = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#2E7D4F"/>
+  <!-- Centered safe content within central 80% circle -->
+  <g transform="translate(51.2, 51.2) scale(0.8)">
+    <!-- School Diary Book Cover -->
+    <rect x="110" y="86" width="292" height="340" rx="28" fill="#FAF7F2"/>
+    <!-- Spine -->
+    <rect x="110" y="86" width="48" height="340" rx="24" fill="#24633E"/>
+    <rect x="136" y="86" width="22" height="340" fill="#2E7D4F"/>
+    
+    <!-- Bookmark ribbon -->
+    <path d="M220 86 V230 L246 206 L272 230 V86 Z" fill="#D97706"/>
+    
+    <!-- Lines -->
+    <rect x="180" y="250" width="180" height="14" rx="7" fill="#2E7D4F"/>
+    <rect x="180" y="278" width="130" height="10" rx="5" fill="#78716C"/>
+    <rect x="180" y="300" width="150" height="10" rx="5" fill="#A8A29E"/>
+    
+    <!-- Checkmark -->
+    <circle cx="340" cy="350" r="34" fill="#E8F5E9" stroke="#2E7D4F" stroke-width="4"/>
+    <path d="M326 350 L336 360 L356 340" fill="none" stroke="#2E7D4F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>`;
+
+async function generate() {
+  fs.writeFileSync(path.join(publicDir, 'icon.svg'), svgIcon, 'utf8');
+
+  // Generate 512x512
+  await sharp(Buffer.from(svgIcon))
+    .resize(512, 512)
+    .png()
+    .toFile(path.join(publicDir, 'pwa-512x512.png'));
+
+  // Generate 192x192
+  await sharp(Buffer.from(svgIcon))
+    .resize(192, 192)
+    .png()
+    .toFile(path.join(publicDir, 'pwa-192x192.png'));
+
+  // Generate apple-touch-icon (180x180)
+  await sharp(Buffer.from(svgIcon))
+    .resize(180, 180)
+    .png()
+    .toFile(path.join(publicDir, 'apple-touch-icon.png'));
+
+  // Generate maskable 512x512
+  await sharp(Buffer.from(svgMaskable))
+    .resize(512, 512)
+    .png()
+    .toFile(path.join(publicDir, 'pwa-maskable-512x512.png'));
+
+  console.log('PWA icons successfully generated!');
+}
+
+generate().catch(err => {
+  console.error('Error generating icons:', err);
+  process.exit(1);
+});
